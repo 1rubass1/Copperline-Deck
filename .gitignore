@@ -1,0 +1,46 @@
+# Build output
+/dist/
+/artifacts/
+/.deps/
+
+# Runtime state (server root only)
+/.control/
+/.webview2-data/
+/logs/
+/world/
+/mods/
+/libraries/
+/runtime/
+/versions/
+/.fabric/
+/EasyAuth/
+
+# Minecraft server-local files (server root only)
+/server.properties
+/eula.txt
+/ops.json
+/whitelist.json
+/banned-*.json
+/usercache.json
+/usernamecache.json
+/fabric-server-launch.jar
+*.jar
+*.zip
+
+# Downloaded / compiled dependencies
+*.exe
+*.dll
+*.pdb
+
+# Local configuration
+/config/*.psd1
+!/config/copperline.example.psd1
+
+# Editor / OS
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+Thumbs.db
+.DS_Store

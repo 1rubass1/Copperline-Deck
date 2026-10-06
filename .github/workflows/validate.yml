@@ -1,0 +1,52 @@
+name: validate
+
+on:
+  push:
+    branches: [development, release, main]
+  pull_request:
+    branches: [development, release, main]
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JavaScript syntax
+        shell: pwsh
+        run: |
+          node --check src/runtime/webui/app.js
+          node --check src/runtime/webui/energy-lab.js
+
+      - name: Validate PowerShell syntax
+        shell: powershell
+        run: |
+          $failed = $false
+          Get-ChildItem src,scripts -Recurse -Filter *.ps1 | ForEach-Object {
+            $tokens = $null
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              $_.FullName,
+              [ref]$tokens,
+              [ref]$errors
+            )
+            if ($errors.Count -gt 0) {
+              Write-Host "::error file=$($_.FullName)::$($errors | Out-String)"
+              $failed = $true
+            }
+          }
+          if ($failed) { exit 1 }
+
+      - name: Compile launcher source
+        shell: powershell
+        run: |
+          $csc = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /target:winexe /reference:System.Windows.Forms.dll /out:"$env:TEMP\CopperlineDeck.exe" src\launcher\CopperlineDeckLauncher.cs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Compile taskbar helper
+        shell: powershell
+        run: |
+          $csc = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /target:library /reference:System.Windows.Forms.dll /out:"$env:TEMP\TaskbarIdentity.dll" src\runtime\taskbar-identity.cs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#121417;color:#dcdcdc}
+*{box-sizing:border-box}
+#viewport{
+  position:absolute;inset:0;overflow:auto;
+  background:#121417;
+  scrollbar-color:#8c633f #171a1e;
+  scrollbar-width:thin;
+  z-index:1;
+}
+#log{
+  min-height:100%;
+  padding:7px 18px 8px 8px;
+  font-family:Consolas,"Cascadia Mono",monospace;
+  font-size:13px;line-height:1.36;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  user-select:text;
+}
+.line{min-height:1.36em;white-space:pre-wrap}
+.banner{color:#a98bc7}
+.command{color:#ffd76a}
+.ready{color:#90ee90}
+.warn{color:#f0df82}
+.error{color:#ef9292}
+.join{color:#b8efb8}
+.leave{color:#a9c4e0}
+.save{color:#dda0dd}
+.info{color:#aee9e9}
+#fx{
+  position:absolute;inset:0;pointer-events:none;z-index:4;
+}
+#scrollBottom{
+  position:absolute;
+  right:calc(var(--scrollbar-width, 12px) + 10px);
+  bottom:14px;
+  width:38px;height:38px;
+  border-radius:50%;
+  border:1px solid rgba(191,118,67,.95);
+  background:rgba(36,39,43,.94);
+  color:#df985f;
+  padding:0;
+  display:grid;place-items:center;
+  z-index:8;
+  cursor:pointer;
+  opacity:0;
+  transform:translateY(8px) scale(.92);
+  pointer-events:none;
+  transition:opacity .16s ease,transform .16s ease,background .16s ease,box-shadow .16s ease;
+  box-shadow:0 5px 18px rgba(0,0,0,.34),0 0 0 1px rgba(191,118,67,.08);
+}
+#scrollBottom.visible{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+#scrollBottom:hover{
+  background:rgba(54,48,44,.97);
+  box-shadow:0 6px 20px rgba(0,0,0,.38),0 0 12px rgba(191,118,67,.18);
+}
+#scrollBottom:active{transform:translateY(1px) scale(.96)}
+#scrollBottom::before{
+  content:"";
+  width:10px;height:10px;
+  border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor;
+  transform:translateY(-2px) rotate(45deg);
+}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="log"></div></div>
+<div id="fx"></div>
+<button id="scrollBottom" type="button" aria-label="В самый низ" title="В самый низ"></button>
+<script src="pixi.min.js"></script>
+<script src="energy-lab.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
